@@ -109,7 +109,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
     );
     ```
 
-6.  Buat style dengan css di file app.css, code css nya bisa diperoleh [Link] (https://github.com/bradtraversy/vanillawebprojects/blob/master/expense-tracker/style.css)
+6.  Buat style dengan css di file app.css, code css nya bisa diperoleh <br/> 
+    [Link](https://github.com/bradtraversy/vanillawebprojects/blob/master/expense-tracker/style.css)
 
 7.  Kita akan melakan slicing terlebih dahulu dengan melakukan beberapa hal diantaranya
 
@@ -247,12 +248,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
     ```
 
 9. Setelah kita slicing maka tampilannya seperti ini
+    <br/>
 
-<br/>
+    ![Application](/img/Screenshot from 2021-02-02 22-07-54.png?raw=true)
 
-![Application](/img/Screenshot from 2021-02-02 22-07-54.png?raw=true)
-
-<br/>
+    <br/>
 
 ```
 
