@@ -196,7 +196,12 @@ In the project directory, you can run:
 
 9. Setelah kita slicing maka tampilannya seperti ini
     <br/>
+<<<<<<< HEAD
     ![Application](/img/Screenshot from 2021-02-02 22-07-54.png?raw=true)
+=======
+
+    ![Application](/img/Screenshot%20from%202021-02-02%2022-07-54.png?raw=true)
+>>>>>>> b318dfb267c0b895e6a5c35bcc9fb4573d3ba0dd
 
 10. Kemudian kita akan membuat fungsionalitasnya, nah dibagian ini kita akan sering mengalami eror heheh
 
