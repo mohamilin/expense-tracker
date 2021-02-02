@@ -7,13 +7,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 In the project directory, you can run:
 
 ### `yarn start`
+
 [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Learn More
+
 1. [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 2. [React documentation](https://reactjs.org/).
 
 ### Making a Progressive Web App
+
 [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
 ## Steps build Expense Tracker
@@ -56,7 +59,7 @@ In the project directory, you can run:
     );
     ```
 
-6.  Buat style dengan css di file app.css, code css nya bisa diperoleh <br/> 
+6.  Buat style dengan css di file app.css, code css nya bisa diperoleh <br/>
     [Link](https://github.com/bradtraversy/vanillawebprojects/blob/master/expense-tracker/style.css)
 
 7.  Kita akan melakan slicing terlebih dahulu dengan melakukan beberapa hal diantaranya
@@ -191,13 +194,106 @@ In the project directory, you can run:
       );
     }
 
-    export default App
+    export default App;
     ```
 
-9. Setelah kita slicing maka tampilannya seperti ini
+9.  Setelah kita slicing maka tampilannya seperti ini
     <br/>
     ![Application](/img/Screenshot%20from%202021-02-02%2022-07-54.png?raw=true)
 
 10. Kemudian kita akan membuat fungsionalitasnya, nah dibagian ini kita akan sering mengalami eror heheh
 
-11. 
+11. Membuat state baru dengan menggunakan useState dalam AddTransaction.js
+
+    - Code AddTransaction.js
+
+    ```js
+    import React, { useState } from "react";
+    export default function AddTransaction() {
+      const [text, setText] = useState("");
+      const [amount, setAmount] = useState(0);
+
+      return (
+        <>
+          <h3>Add Transaction</h3>
+          <form id="form">
+            <div className="form-control">
+              <label htmlFor="text">Text</label>
+              <input
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Enter text..."
+              />
+            </div>
+            <div className="form-control">
+              <label htmlFor="amount">
+                Amount <br />
+                (negative - expense, positive - income)
+              </label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter amount..."
+              />
+            </div>
+            <button className="btn">Add transaction</button>
+          </form>
+        </>
+      );
+    }
+    ```
+
+12. Selanjutanya kita buat Redux dengan membuat folder context dalam src
+
+    - Didalam folder context terdapat GlobalState.js dan AppReducer.js
+    - Code GlobalState.js
+
+    ```js
+    import React, { createContext, useReducer } from "react";
+    import AppReducer from "./AppReducer";
+
+    // initial state
+    const initialState = {
+      transactions: [
+        { id: 1, text: "Flower", amount: -20 },
+        { id: 2, text: "Salary", amount: 300 },
+        { id: 3, text: "Book", amount: -10 },
+        { id: 4, text: "Camera", amount: 150 },
+      ],
+    };
+
+    // create context
+    export const GlobalContext = createContext(initialState);
+
+    // Provider components
+    export const GlobalProvider = ({ children }) => {
+      const [state, dispatch] = useReducer(AppReducer, initialState);
+      return (
+        <GlobalContext.Provider value={{ transactions: state.transactions }}>
+          {children}
+        </GlobalContext.Provider>
+      );
+    };
+    ```
+
+    - Code AppReducer.js
+
+    ```js
+    export default (state, action) => {
+      switch (action.type) {
+        default:
+          return state;
+      }
+    };
+    ```
+
+13. Kemudian import GlobalProvider ke dapam App.js
+    ```js
+    <GlobalProvider>
+        <Header/>
+        .....................
+    </GlobalProvider>
+    ```
+13.  pause ke 24.00
