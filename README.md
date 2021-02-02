@@ -250,7 +250,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 9. Setelah kita slicing maka tampilannya seperti ini
     <br/>
 
-    ![Application](/img/Screenshot from 2021-02-02 22-07-54.png?raw=true)
+    ![Application](/img/Screenshot%20from%202021-02-02%2022-07-54.png?raw=true)
 
     <br/>
 
