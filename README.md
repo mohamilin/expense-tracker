@@ -245,7 +245,7 @@ In the project directory, you can run:
     }
     ```
 
-12. Selanjutanya kita buat Redux dengan membuat folder context dalam src
+12. Selanjutanya kita akan memanfaatkan React Hook dan Context API dengan membuat folder context dalam src
 
     - Didalam folder context terdapat GlobalState.js dan AppReducer.js
     - Code GlobalState.js
@@ -289,11 +289,255 @@ In the project directory, you can run:
     };
     ```
 
-13. Kemudian import GlobalProvider ke dapam App.js
+13. Kemudian import GlobalProvider ke App.js
     ```js
     <GlobalProvider>
-        <Header/>
-        .....................
+      <Header />
+      .....................
     </GlobalProvider>
     ```
-13.  pause ke 24.00
+14. Import GlobalState ke TransactionList.js
+
+    - Code TransactionList.js
+
+    ```js
+    import React, { useContext } from "react";
+    import { GlobalContext } from "../context/GlobalState";
+
+    export default function TransactionLits() {
+      const { transactions } = useContext(GlobalContext);
+      return (
+        <>
+          <h3>History</h3>
+          <ul id="list" className="list">
+            {transactions.map((item, index) => (
+              <li className="minus" key={index}>
+                {item.text} <span>-$400</span>
+                <button className="delete-btn">x</button>
+              </li>
+            ))}
+          </ul>
+        </>
+      );
+    }
+    ```
+
+15. Didalam TransactionList.js terdapat mapping data dari transaction, kita akan keluarkan dengan membuat file Transaction.js
+
+    - Code Transaction.js
+
+    ```js
+    import React from "react";
+    export default function Transaction({ item }) {
+      const sign = item.amount < 0 ? "-" : "+";
+      return (
+        <>
+          <li className={item.amount < 0 ? "minus" : "plus"}>
+            {item.text}{" "}
+            <span>
+              {sign}${Math.abs(item.amount)}
+            </span>
+            <button className="delete-btn">x</button>
+          </li>
+        </>
+      );
+    }
+    ```
+
+16. import GlobalContext dan Transaction ke dalam Balance.js
+
+    - Code Transaction.js
+
+    ```js
+    import React, { useContext } from "react";
+    import { GlobalContext } from "../context/GlobalState";
+
+    export default function Balance() {
+      const { transactions } = useContext(GlobalContext);
+      const amounts = transactions.map((item) => item.amount);
+      const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+      return (
+        <>
+          <h4>Your Balance</h4>
+          <h1>${total}</h1>
+        </>
+      );
+    }
+    ```
+
+17. import GlobalContext dan Transaction ke dalam IncomeExpense.js
+
+    ```js
+    import React, { useContext } from "react";
+    import { GlobalContext } from "../context/GlobalState";
+
+    export default function Income() {
+      const { transactions } = useContext(GlobalContext);
+      const amounts = transactions.map((transaction) => transaction.amount);
+
+      const income = amounts
+        .filter((item) => item > 0)
+        .reduce((acc, item) => (acc += item), 0)
+        .toFixed(2);
+
+      const expense = (
+        amounts
+          .filter((item) => item < 0)
+          .reduce((acc, item) => (acc += item), 0) * -1
+      ).toFixed(2);
+      console.log("out in", { income, expense });
+      return (
+        <>
+          <div className="inc-exp-container">
+            <div>
+              <h4>Income</h4>
+              <p className="money plus">{income}</p>
+            </div>
+            <div>
+              <h4>Expense</h4>
+              <p className="money minus">{expense}</p>
+            </div>
+          </div>
+        </>
+      );
+    }
+    ```
+
+18. Selanjutnya membuat function delete item transaction dan add transaction, yang nantinya akan secara auto terhubung dengan Balance, yaitu dengan membuat action di GlobalState.js dan case di AppReducer.js
+
+        - Code GlobalState.js
+
+        ```js
+        // Provider components
+        export const GlobalProvider = ({ children }) => {
+          const [state, dispatch] = useReducer(AppReducer, initialState);
+
+          //action delete
+          function deleteTransaction(id) {
+            dispatch({
+              type: "DELETE_TRANSACTION",
+              payload: id,
+            });
+          }
+
+          function addTransaction(transaction) {
+            dispatch({
+              type: "ADD_TRANSACTION",
+              payload: transaction,
+            });
+          }
+
+          return (
+            <GlobalContext.Provider
+              value={{
+                transactions: state.transactions,
+                deleteTransaction,
+                addTransaction,
+              }}
+            >
+              {children}
+            </GlobalContext.Provider>
+          );
+        };
+        ```
+        - Code AppReducer.js
+        ```js
+          export default (state, action) => {
+          switch (action.type) {
+              case 'DELETE_TRANSACTION':
+                  return {
+                      ...state,
+                      transactions : state.transactions.filter(transaction =>
+                          transaction.id !== action.payload)
+                  }
+              case 'ADD_TRANSACTION':
+                  return {
+                      ...state,
+                      transactions : [action.payload, ...state.transactions]
+                  }
+              default:
+                  return state
+            }
+          }
+        ```
+
+19. Kita akan menyesuaikan function delete ke Transaction.js dan function add transaction ke AddTransactions.js
+
+    - Code Transaction
+
+    ```js
+    import React, { useContext } from "react";
+    import { GlobalContext } from "../context/GlobalState";
+    import Transaction from "./Transaction";
+
+    export default function TransactionLits() {
+      const { transactions } = useContext(GlobalContext);
+
+      return (
+        <>
+          <h3>History</h3>
+          <ul id="list" className="list">
+            {transactions.map((item) => (
+              <Transaction key={item.id} item={item} />
+            ))}
+          </ul>
+        </>
+      );
+    }
+    ```
+
+    - Code AddTransaction.js
+
+    ```js
+    import React, { useState, useContext } from "react";
+    import { GlobalContext } from "../context/GlobalState";
+
+    export default function AddTransaction() {
+      const [text, setText] = useState("");
+      const [amount, setAmount] = useState(0);
+
+      const { addTransaction } = useContext(GlobalContext);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const newTransaction = {
+          id: Math.floor(Math.random() * 100000000),
+          text,
+          amount: +amount,
+        };
+
+        addTransaction(newTransaction);
+      };
+      return (
+        <>
+          <h3>Add Transaction</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="form-control">
+              <label htmlFor="text">Text</label>
+              <input
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Enter text..."
+              />
+            </div>
+            <div className="form-control">
+              <label htmlFor="amount">
+                Amount <br />
+                (negative - expense, positive - income)
+              </label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter amount..."
+              />
+            </div>
+            <button className="btn">Add transaction</button>
+          </form>
+        </>
+      );
+    }
+    ```
+
+20. Nah, sampai sini, tutorial ini. Tutorial ini saya dapatkan dari Channel [Traversy Media](https://www.youtube.com/watch?v=XuFDcZABiDQ)
