@@ -427,40 +427,41 @@ In the project directory, you can run:
             });
           }
 
-          return (
-            <GlobalContext.Provider
-              value={{
-                transactions: state.transactions,
-                deleteTransaction,
-                addTransaction,
-              }}
-            >
-              {children}
-            </GlobalContext.Provider>
-          );
-        };
+            return (
+              <GlobalContext.Provider
+                value={{
+                  transactions: state.transactions,
+                  deleteTransaction,
+                  addTransaction,
+                }}
+              >
+                {children}
+              </GlobalContext.Provider>
+            );
+          };
         ```
         - Code AppReducer.js
-        
-      ```js
-           export default (state, action) => {
-          switch (action.type) {
-              case 'DELETE_TRANSACTION':
-                  return {
-                      ...state,
-                      transactions : state.transactions.filter(transaction =>
-                          transaction.id !== action.payload)
-                  }
-              case 'ADD_TRANSACTION':
-                  return {
-                      ...state,
-                      transactions : [action.payload, ...state.transactions]
-                  }
-              default:
-                  return state
-            }
-          }
-        ```
+
+        ```js
+            export default (state, action) => {
+              switch (action.type) {
+                  case 'DELETE_TRANSACTION':
+                      return {
+                          ...state,
+                          transactions : state.transactions.filter(transaction =>
+                              transaction.id !== action.payload)
+                      }
+                  case 'ADD_TRANSACTION':
+                      return {
+                          ...state,
+                          transactions : [action.payload, ...state.transactions]
+                      }
+                  default:
+                      return state
+                }
+              }
+          ```
+
 19. Kita akan menyesuaikan function delete ke Transaction.js dan function add transaction ke AddTransactions.js
 
     - Code Transaction
