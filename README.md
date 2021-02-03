@@ -441,8 +441,9 @@ In the project directory, you can run:
         };
         ```
         - Code AppReducer.js
-        ```js
-          export default (state, action) => {
+        
+      ```js
+           export default (state, action) => {
           switch (action.type) {
               case 'DELETE_TRANSACTION':
                   return {
@@ -460,7 +461,6 @@ In the project directory, you can run:
             }
           }
         ```
-
 19. Kita akan menyesuaikan function delete ke Transaction.js dan function add transaction ke AddTransactions.js
 
     - Code Transaction
